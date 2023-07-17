@@ -1,7 +1,7 @@
 name: "Build Android app"
 
 on:
-  workflow_dispatch:
+  push:
     branches: [main]
     # can add push and pull_request here 
 
@@ -12,24 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: "11"
-          distribution: "adopt"
-          cache: "gradle"
-
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
-
-      - name: Setup Node  
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
       - name: Run Yarn Install
         run: |
-             yarn install             
+             yarn install  
+
       - name: Build application
         run: |
              cd ./android &&
@@ -38,7 +24,7 @@ jobs:
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v3
         with:
-           name: release-artifacts
+           name: release-artifacts.apk
            path: |
             android/app/build/outputs/apk/release/
             retention-days: 3

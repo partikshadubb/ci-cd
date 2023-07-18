@@ -6,57 +6,57 @@ on:
     # can add push and pull_request here 
 
 jobs:
-  # build-android:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
-
-  #     - name: Run Yarn Install
-  #       run: |
-  #            yarn install  
-
-  #     - name: Build application
-  #       run: |
-  #            cd ./android &&
-  #            ./gradlew assembleRelease  
-             
-  #     - name: Upload Release Build to Artifacts
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #          name: release-artifacts.apk
-  #          path: |
-  #           android/app/build/outputs/apk/release/
-  #           retention-days: 3
-             
-  build-ios:
-    runs-on: macos-latest
+  build-android:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - uses: actions/cache@v2
-        with:
-          path: ~/Library/Caches/CocoaPods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cocoapods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - run: yarn install --frozen-lockfile
+      - name: Run Yarn Install
+        run: |
+             yarn install  
 
-      - run: pod install
-        working-directory: ios
+      - name: Build application
+        run: |
+             cd ./android &&
+             ./gradlew assembleRelease  
+             
+      - name: Upload Release Build to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+           name: release-artifacts.apk
+           path: |
+            android/app/build/outputs/apk/release/
+            retention-days: 3
+             
+  # build-ios:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/cache@v2
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-yarn-
+  #     - uses: actions/cache@v2
+  #       with:
+  #         path: ~/Library/Caches/CocoaPods
+  #         key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-pods-
+  #     - uses: actions/cache@v2
+  #       with:
+  #         path: ~/.cocoapods
+  #         key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-pods-
 
-      - run: xcodebuild clean archive -workspace Test.xcworkspace -scheme Test -archivePath Test.xcarchive CODE_SIGNING_ALLOWED=NO | xcpretty
-        working-directory: ios
+  #     - run: yarn install --frozen-lockfile
+
+  #     - run: pod install
+  #       working-directory: ios
+
+  #     - run: xcodebuild clean archive -workspace testCiCdReactNative.xcworkspace -scheme testCiCdReactNative -archivePath testCiCdReactNative.xcarchive CODE_SIGNING_ALLOWED=NO | xcpretty
+  #       working-directory: ios
 
